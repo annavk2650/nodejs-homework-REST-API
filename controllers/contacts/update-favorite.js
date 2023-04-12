@@ -2,36 +2,26 @@ const Joi = require('joi');
 const { ContactModel } = require('../../database/models');
 
 const addSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-  favorite: Joi.boolean(),
+  favorite: Joi.boolean().required(),
 });
 
-async function updateById(req, res, next) {
+async function updateStatusContact(req, res, next) {
   try {
     const { contactId } = req.params;
-    const { name, email, phone, favorite } = req.body;
-    const { error } = addSchema.validate({ name, email, phone, favorite });
+    const { favorite } = req.body;
+    const { error } = addSchema.validate({ favorite });
     if (error) {
       return res.status(400).json({
-        message: 'missing fields',
+        message: 'missing field favorite',
       });
     }
     const result = await ContactModel.findByIdAndUpdate(
       contactId,
       {
-        name,
-        email,
-        phone,
         favorite,
       },
       { new: true }
-    ).catch(error => {
-      const err = Error(error.message);
-      err.code = 400;
-      throw err;
-    });
+    );
 
     if (result === null) {
       return res.status(404).json({
@@ -52,5 +42,5 @@ async function updateById(req, res, next) {
 }
 
 module.exports = {
-  updateById,
+  updateStatusContact,
 };

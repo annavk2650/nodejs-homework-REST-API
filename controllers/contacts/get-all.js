@@ -1,24 +1,25 @@
 const { ContactModel } = require('../../database/models');
+const { mapContactOutput } = require('../../services');
 
 async function getAll(req, res, next) {
-  try {
-    const result = await ContactModel.find();
+  const { _id: owner } = req.user;
 
-    const mapContactOutput = contactDocument => {
-      const { _id, ...rest } = contactDocument.toObject();
-      const mappedContact = {
-        id: _id,
-        ...rest,
-      };
-      return mappedContact;
-    };
+  const { page, limit, favorite } = req.query;
 
-    const mappedContacts = result.map(mapContactOutput);
+  let searchCriteries = { owner };
 
-    res.status(200).json(mappedContacts);
-  } catch (error) {
-    next(error);
+  if (favorite) {
+    searchCriteries.favorite = favorite;
   }
+
+  const contacts = await ContactModel.find(searchCriteries, null, {
+    skip: (page - 1) * limit,
+    limit,
+  }).populate('owner', 'email subscription');
+
+  const mappedContacts = contacts.map(mapContactOutput);
+
+  res.status(200).json(mappedContacts);
 }
 
 module.exports = {

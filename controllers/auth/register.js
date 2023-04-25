@@ -2,6 +2,7 @@ const { UserModel } = require('../../database/models');
 const crypto = require('crypto');
 const Joi = require('joi');
 const { createHash, createHttpException, createJWT } = require('../../services');
+const gravatar = require('gravatar');
 
 const addSchema = Joi.object({
   email: Joi.string().required(),
@@ -17,13 +18,14 @@ const register = async (req, res, next) => {
   }
 
   const passwordHash = await createHash(password);
+  const avatarURL = gravatar.url(email);
 
   const existingUser = await UserModel.findOne({ email });
   if (existingUser) {
     throw createHttpException('This email is already taken', 409);
   }
 
-  const newUser = await UserModel.create({ email, passwordHash }).catch(e => {
+  const newUser = await UserModel.create({ email, passwordHash, avatarURL }).catch(e => {
     throw createHttpException('Email in use', 409);
   });
 

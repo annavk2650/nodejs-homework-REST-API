@@ -10,7 +10,7 @@ const addSchema = Joi.object({
 });
 
 const updateSubscription = async (req, res, next) => {
-  const { id } = req.params;
+  const { id } = req.user;
   const { subscription } = req.body;
 
   const { error } = addSchema.validate({ subscription });

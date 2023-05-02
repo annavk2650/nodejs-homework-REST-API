@@ -5,11 +5,11 @@ const deleteById = async (req, res, next) => {
   const { contactId } = req.params;
 
   const result = await ContactModel.findByIdAndDelete(contactId).catch(error => {
-    throw createHttpException(error.message, 400);
+    throw createHttpException(400, error.message);
   });
 
   if (result === null) {
-    throw createHttpException('Not found', 404);
+    throw createHttpException(404, 'Not found');
   }
 
   res.status(200).json({

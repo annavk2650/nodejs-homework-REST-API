@@ -12,7 +12,7 @@ const updateStatusContact = async (req, res, next) => {
 
   const { error } = addSchema.validate({ favorite });
   if (error) {
-    throw createHttpException('missing fields', 400);
+    throw createHttpException(400, 'missing fields');
   }
 
   const result = await ContactModel.findByIdAndUpdate(

@@ -5,7 +5,7 @@ const getById = async (req, res, next) => {
   const { contactId } = req.params;
 
   const result = await ContactModel.findById(contactId).catch(error => {
-    throw createHttpException(error.message, 400);
+    throw createHttpException(400, error.message);
   });
 
   if (!result) {

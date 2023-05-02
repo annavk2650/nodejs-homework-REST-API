@@ -1,4 +1,4 @@
-const createHttpException = (message, code) => {
+const createHttpException = (code, message) => {
   const err = new Error(message);
   err.code = code;
   return err;

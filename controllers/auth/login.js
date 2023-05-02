@@ -19,10 +19,16 @@ const login = async (req, res, next) => {
   const user = await UserModel.findOne({ email });
 
   if (!user) {
-    throw createHttpException('Email or password is wrong', 401);
+    throw createHttpException(401, 'Email or password is wrong');
+  }
+  console.log(user.verify);
+
+  if (!user.verify) {
+    throw createHttpException(401, 'User not verified');
   }
 
   const match = await checkHash(password, user.passwordHash);
+
   if (!match) {
     res.status(401).json({ messange: 'Email or password is wrong' });
     return;

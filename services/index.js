@@ -3,6 +3,7 @@ const { createHttpException } = require('./create-http-exception.service');
 const { createHash, checkHash } = require('./hashing.service');
 const { createJWT, verifyJWT } = require('./jwt.service');
 const { mapContactOutput } = require('./mapContact.service');
+const sendEmail = require('./sendEmail.service');
 
 module.exports = {
   createHash,
@@ -12,4 +13,5 @@ module.exports = {
   verifyJWT,
   controllerWrapper,
   mapContactOutput,
+  sendEmail,
 };
